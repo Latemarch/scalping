@@ -1,7 +1,7 @@
-import * as d3 from 'd3';
-import { writeCandleInfo } from './candlesChart';
-import { updateGuideLines } from './candlesChart';
-import { BybitKline, IndicatorData } from '@/types/type';
+import * as d3 from "d3";
+import { writeCandleInfo } from "./candlesChart";
+import { updateGuideLines } from "./candlesChart";
+import { BybitKline, IndicatorData } from "@/types/type";
 
 export function handleMouseMove({
   event,
@@ -15,8 +15,8 @@ export function handleMouseMove({
   svg,
   data,
   x,
-  indicators,
-}: {
+}: // indicators,
+{
   event: any;
   y: d3.ScaleLinear<number, number>;
   x: d3.ScaleTime<number, number>;
@@ -42,9 +42,9 @@ export function handleMouseMove({
   const xPos = x(d[0]);
   const yPos = yCoord;
 
-  d3.select('.candle-info').call((text) => writeCandleInfo(text, d0));
+  d3.select(".candle-info").call((text) => writeCandleInfo(text, d0));
 
-  let indicatorText = '';
+  let indicatorText = "";
   if (yCoord < height * candleChartHeightRatio) {
     indicatorText = y.invert(yCoord).toFixed(2);
   } else if (
@@ -61,19 +61,19 @@ export function handleMouseMove({
   //     ? y.invert(yCoord).toFixed(2)
   //     : yVolume.invert(yCoord).toFixed(0);
 
-  d3.select('.price-indicator')
-    .attr('transform', `translate(${width}, ${yPos - 10})`)
-    .select('text')
-    .text(indicatorText)
-    .attr('opacity', 1);
+  d3.select(".price-indicator")
+    .attr("opacity", 1)
+    .attr("transform", `translate(${width}, ${yPos - 10})`)
+    .select("text")
+    .text(indicatorText);
 
   updateGuideLines({ svg, xPos, yPos, width, height });
 }
 
 export function handleMouseLeave() {
-  d3.select('.guide-vertical-line').attr('opacity', 0);
-  d3.select('.guide-horizontal-line').attr('opacity', 0);
-  d3.select('.candle-info').selectAll('tspan').remove();
-  // d3.select('.price-indicator').attr('opacity', 0);
+  d3.select(".guide-vertical-line").attr("opacity", 0);
+  d3.select(".guide-horizontal-line").attr("opacity", 0);
+  d3.select(".candle-info").selectAll("tspan").remove();
+  d3.select(".price-indicator").attr("opacity", 0);
   // d3.select('.date-indicator').attr('opacity', 0);
 }
