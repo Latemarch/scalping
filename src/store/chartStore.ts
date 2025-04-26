@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-import { IndicatorData, ChartOptions } from '@/types/type';
+import { create } from "zustand";
+import { ChartOptions } from "@/types/type";
 
 interface ChartState {
   // 옵션
@@ -20,7 +20,7 @@ export const useChartStore = create<ChartState>((set, get) => ({
     ma10: false,
     ma20: false,
     bollingerBands: false,
-    vwap: false,
+    vwap: true,
   },
   candleChartHeightRatio: 0.6,
   volumeChartHeightRatio: 0.8,

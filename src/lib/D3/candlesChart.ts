@@ -1,25 +1,25 @@
-import { BybitKline } from '@/types/type';
-import * as d3 from 'd3';
-import { colors } from '../constants';
+import { BybitKline } from "@/types/type";
+import * as d3 from "d3";
+import { colors } from "../constants";
 
 // 서버 환경인지 확인하는 유틸리티 함수
-const isServer = () => typeof window === 'undefined';
+const isServer = () => typeof window === "undefined";
 
 export function createCanvasInSVG(svg: any, width: number, height: number) {
   // 기존에 있던 foreignObject 요소 제거
-  svg.selectAll('foreignObject').remove();
+  svg.selectAll("foreignObject").remove();
 
   const foreignObject = svg
-    .append('foreignObject')
-    .attr('x', 0)
-    .attr('y', 0)
-    .attr('width', width)
-    .attr('height', height)
-    .attr('clip-path', 'url(#chart-area)');
+    .append("foreignObject")
+    .attr("x", 0)
+    .attr("y", 0)
+    .attr("width", width)
+    .attr("height", height)
+    .attr("clip-path", "url(#chart-area)");
 
   const pixelRatio = window.devicePixelRatio || 1;
 
-  const canvasNode = document.createElement('canvas');
+  const canvasNode = document.createElement("canvas");
   canvasNode.width = width * pixelRatio;
   canvasNode.height = height * pixelRatio;
   canvasNode.style.width = `${width}px`;
@@ -27,13 +27,13 @@ export function createCanvasInSVG(svg: any, width: number, height: number) {
 
   foreignObject.node().appendChild(canvasNode);
 
-  const ctx = canvasNode.getContext('2d', { alpha: true });
+  const ctx = canvasNode.getContext("2d", { alpha: true });
 
   if (ctx) {
     ctx.scale(pixelRatio, pixelRatio);
 
     ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = 'high';
+    ctx.imageSmoothingQuality = "high";
   }
 
   return { foreignObject, canvas: canvasNode, ctx, pixelRatio };
@@ -120,25 +120,29 @@ export function drawVolumeOnCanvas(
 }
 
 export function createCandles(svg: any, data: BybitKline[], x: any, y: any) {
-  const candles = svg.append('g').attr('class', 'candles').attr('clip-path', 'url(#chart-area)');
+  const candles = svg
+    .append("g")
+    .attr("class", "candles")
+    .attr("clip-path", "url(#chart-area)");
 
   // Then draw the candle bodies (rectangles)
-  const candleWidth = (x(new Date(Number(data[1][0]))) - x(new Date(Number(data[0][0])))) * 0.9;
+  const candleWidth =
+    (x(new Date(Number(data[1][0]))) - x(new Date(Number(data[0][0])))) * 0.9;
 
   candles
-    .selectAll('rect')
+    .selectAll("rect")
     .data(data)
     .enter()
-    .append('rect')
-    .attr('fill', (d: BybitKline) => (d[1] > d[4] ? '#EF454A' : '#1EB26B'));
+    .append("rect")
+    .attr("fill", (d: BybitKline) => (d[1] > d[4] ? "#EF454A" : "#1EB26B"));
 
   candles
-    .selectAll('line')
+    .selectAll("line")
     .data(data)
     .enter()
-    .append('line')
-    .attr('stroke', (d: BybitKline) => (d[1] > d[4] ? '#EF454A' : '#1EB26B'))
-    .attr('stroke-width', 1.5);
+    .append("line")
+    .attr("stroke", (d: BybitKline) => (d[1] > d[4] ? "#EF454A" : "#1EB26B"))
+    .attr("stroke-width", 1.5);
 
   updateCandles({ candles, x, y, candleWidth });
   return { candles, candleWidth };
@@ -146,81 +150,81 @@ export function createCandles(svg: any, data: BybitKline[], x: any, y: any) {
 
 export function updateCandles({ candles, x, y, candleWidth }: any) {
   candles
-    .selectAll('rect')
-    .attr('x', (d: any) => x(new Date(d[0])) - candleWidth / 2)
-    .attr('y', (d: any) => y(Math.max(d[1], d[4])))
-    .attr('height', (d: any) => Math.max(Math.abs(y(d[1]) - y(d[4])), 1))
-    .attr('width', candleWidth);
+    .selectAll("rect")
+    .attr("x", (d: any) => x(new Date(d[0])) - candleWidth / 2)
+    .attr("y", (d: any) => y(Math.max(d[1], d[4])))
+    .attr("height", (d: any) => Math.max(Math.abs(y(d[1]) - y(d[4])), 1))
+    .attr("width", candleWidth);
 
   // Update wick positions
   candles
-    .selectAll('line')
-    .attr('x1', (d: any) => x(new Date(d[0])))
-    .attr('x2', (d: any) => x(new Date(d[0])))
-    .attr('y1', (d: any) => y(d[3]))
-    .attr('y2', (d: any) => y(d[2]));
+    .selectAll("line")
+    .attr("x1", (d: any) => x(new Date(d[0])))
+    .attr("x2", (d: any) => x(new Date(d[0])))
+    .attr("y1", (d: any) => y(d[3]))
+    .attr("y2", (d: any) => y(d[2]));
 }
 
 export function createGuideLines(svg: any) {
   const verticalLine = svg
-    .append('line')
-    .attr('class', 'guide-vertical-line')
-    .attr('stroke', colors.gray)
-    .attr('stroke-width', 1)
-    .attr('stroke-dasharray', '4,4')
-    .attr('opacity', 0);
+    .append("line")
+    .attr("class", "guide-vertical-line")
+    .attr("stroke", colors.gray)
+    .attr("stroke-width", 1)
+    .attr("stroke-dasharray", "4,4")
+    .attr("opacity", 0);
 
   const horizontalLine = svg
-    .append('line')
-    .attr('class', 'guide-horizontal-line')
-    .attr('stroke', colors.gray)
-    .attr('stroke-width', 1)
-    .attr('stroke-dasharray', '4,4')
-    .attr('opacity', 0);
+    .append("line")
+    .attr("class", "guide-horizontal-line")
+    .attr("stroke", colors.gray)
+    .attr("stroke-width", 1)
+    .attr("stroke-dasharray", "4,4")
+    .attr("opacity", 0);
 
   return { verticalLine, horizontalLine };
 }
 
 export function updateGuideLines({ svg, xPos, yPos, width, height }: any) {
   svg
-    .select('.guide-vertical-line')
-    .attr('x1', xPos)
-    .attr('y1', 0)
-    .attr('x2', xPos)
-    .attr('y2', height)
-    .attr('opacity', 1);
+    .select(".guide-vertical-line")
+    .attr("x1", xPos)
+    .attr("y1", 0)
+    .attr("x2", xPos)
+    .attr("y2", height)
+    .attr("opacity", 1);
 
   svg
-    .select('.guide-horizontal-line')
-    .attr('x1', 0)
-    .attr('y1', yPos)
-    .attr('x2', width)
-    .attr('y2', yPos)
-    .attr('opacity', 1);
+    .select(".guide-horizontal-line")
+    .attr("x1", 0)
+    .attr("y1", yPos)
+    .attr("x2", width)
+    .attr("y2", yPos)
+    .attr("opacity", 1);
 }
 
 export function writeCandleInfo(text: any, d: BybitKline) {
-  text.selectAll('tspan').remove();
-  text.append('tspan').text('O: ').style('fill', colors.gray);
+  text.selectAll("tspan").remove();
+  text.append("tspan").text("O: ").style("fill", colors.gray);
   text
-    .append('tspan')
+    .append("tspan")
     .text(`${d[1].toFixed(1)} `)
-    .style('fill', d[1] > d[4] ? colors.red : colors.green);
-  text.append('tspan').text('H: ').style('fill', colors.gray);
+    .style("fill", d[1] > d[4] ? colors.red : colors.green);
+  text.append("tspan").text("H: ").style("fill", colors.gray);
   text
-    .append('tspan')
+    .append("tspan")
     .text(`${d[2].toFixed(1)} `)
-    .style('fill', d[1] > d[4] ? colors.red : colors.green);
-  text.append('tspan').text('L: ').style('fill', colors.gray);
+    .style("fill", d[1] > d[4] ? colors.red : colors.green);
+  text.append("tspan").text("L: ").style("fill", colors.gray);
   text
-    .append('tspan')
+    .append("tspan")
     .text(`${d[3].toFixed(1)} `)
-    .style('fill', d[1] > d[4] ? colors.red : colors.green);
-  text.append('tspan').text('C: ').style('fill', colors.gray);
+    .style("fill", d[1] > d[4] ? colors.red : colors.green);
+  text.append("tspan").text("C: ").style("fill", colors.gray);
   text
-    .append('tspan')
+    .append("tspan")
     .text(`${d[4].toFixed(1)} `)
-    .style('fill', d[1] > d[4] ? colors.red : colors.green);
+    .style("fill", d[1] > d[4] ? colors.red : colors.green);
   // text.append('tspan').text('V: ').style('fill', colors.gray);
   // text
   //   .append('tspan')
@@ -228,36 +232,49 @@ export function writeCandleInfo(text: any, d: BybitKline) {
   //   .style('fill', d[1] > d[4] ? colors.red : colors.green);
 }
 
-export function createIndicators(svg: any, width: number, height: number, rectWidth: number) {
+export function createIndicators(
+  svg: any,
+  width: number,
+  height: number,
+  rectWidth: number
+) {
   const priceIndicator = svg
-    .append('g')
-    .attr('class', 'price-indicator')
-    .attr('transform', `translate(${width * 2}, -10)`);
-  priceIndicator.append('rect').attr('width', 100).attr('height', 20).attr('fill', '#282828');
+    .append("g")
+    .attr("class", "price-indicator")
+    .attr("transform", `translate(${width * 2}, -10)`);
+  priceIndicator
+    .append("rect")
+    .attr("width", 100)
+    .attr("height", 20)
+    .attr("fill", "#282828");
   // .attr('opacity', 0.5);
   priceIndicator
-    .append('text')
-    .attr('x', 3)
-    .attr('y', 15)
-    .text('100')
-    .style('font-size', '14px')
-    .style('fill', 'white')
-    .style('text-anchor', 'start');
+    .append("text")
+    .attr("x", 3)
+    .attr("y", 15)
+    .text("100")
+    .style("font-size", "14px")
+    .style("fill", "white")
+    .style("text-anchor", "start");
 
   const dateIndicator = svg
-    .append('g')
-    .attr('class', 'date-indicator')
-    .attr('transform', `translate(0, ${height * 2})`);
-  dateIndicator.append('rect').attr('width', rectWidth).attr('height', 18).attr('fill', '#282828');
+    .append("g")
+    .attr("class", "date-indicator")
+    .attr("transform", `translate(0, ${height * 2})`);
+  dateIndicator
+    .append("rect")
+    .attr("width", rectWidth)
+    .attr("height", 18)
+    .attr("fill", "#282828");
   // .attr('opacity', 0.5);
   dateIndicator
-    .append('text')
-    .attr('x', 10)
-    .attr('y', 14)
-    .text('100')
-    .style('font-size', '14px')
-    .style('fill', 'white')
-    .style('text-anchor', 'start');
+    .append("text")
+    .attr("x", 10)
+    .attr("y", 14)
+    .text("100")
+    .style("font-size", "14px")
+    .style("fill", "white")
+    .style("text-anchor", "start");
   return { priceIndicator, dateIndicator };
 }
 
@@ -284,21 +301,28 @@ export function updateAxis({
   yAxisGroup,
   yVolumeAxisGroup,
 }: Props) {
-  const xAxis = d3.axisBottom(x).ticks(10).tickSizeInner(-height).tickPadding(4);
+  const xAxis = d3
+    .axisBottom(x)
+    .ticks(10)
+    .tickSizeInner(-height)
+    .tickPadding(4);
   const yAxis = d3.axisRight(y).ticks(10).tickSizeInner(-width).tickPadding(4);
   const yVolumeAxis = d3
     .axisRight(yVolume)
     .ticks(4)
-    .tickFormat((d: any) => (d === 0 ? '' : (d / 1000).toString() + 'K'))
+    .tickFormat((d: any) => (d === 0 ? "" : (d / 1000).toString() + "K"))
     .tickSizeInner(-width);
   xAxisGroup.call(xAxis);
   yAxisGroup.call(yAxis);
   yVolumeAxisGroup.call(yVolumeAxis);
-  xAxisGroup.selectAll('path').remove();
-  yAxisGroup.selectAll('path').remove();
-  yVolumeAxisGroup.selectAll('path').remove();
-  svg.selectAll('.tick line').style('stroke', colors.gray).style('stroke-width', 0.2);
-  svg.selectAll('.tick text').style('font-size', '14px');
+  xAxisGroup.selectAll("path").remove();
+  yAxisGroup.selectAll("path").remove();
+  yVolumeAxisGroup.selectAll("path").remove();
+  svg
+    .selectAll(".tick line")
+    .style("stroke", colors.gray)
+    .style("stroke-width", 0.2);
+  svg.selectAll(".tick text").style("font-size", "14px");
 }
 
 export function createBaseLine(
@@ -309,43 +333,43 @@ export function createBaseLine(
   volumeChartHeightRatio: number
 ) {
   const baseLineX = svg
-    .append('line')
-    .attr('class', 'base-line-x')
-    .attr('x1', 0)
-    .attr('y1', height)
-    .attr('x2', width * 5)
-    .attr('y2', height)
-    .style('stroke', colors.baseLine)
-    .style('stroke-width', 1);
+    .append("line")
+    .attr("class", "base-line-x")
+    .attr("x1", 0)
+    .attr("y1", height)
+    .attr("x2", width * 5)
+    .attr("y2", height)
+    .style("stroke", colors.baseLine)
+    .style("stroke-width", 1);
   const splitLineX = svg
-    .append('line')
-    .attr('class', 'base-line-x')
-    .attr('x1', 0)
-    .attr('y1', height * candleChartHeightRatio)
-    .attr('x2', width * 5)
-    .attr('y2', height * candleChartHeightRatio)
-    .style('stroke', colors.baseLine)
-    .style('stroke-width', 1);
+    .append("line")
+    .attr("class", "base-line-x")
+    .attr("x1", 0)
+    .attr("y1", height * candleChartHeightRatio)
+    .attr("x2", width * 5)
+    .attr("y2", height * candleChartHeightRatio)
+    .style("stroke", colors.baseLine)
+    .style("stroke-width", 1);
 
   const splitLineX2 = svg
-    .append('line')
-    .attr('class', 'base-line-x')
-    .attr('x1', 0)
-    .attr('y1', height * volumeChartHeightRatio)
-    .attr('x2', width * 5)
-    .attr('y2', height * volumeChartHeightRatio)
-    .style('stroke', colors.baseLine)
-    .style('stroke-width', 1);
+    .append("line")
+    .attr("class", "base-line-x")
+    .attr("x1", 0)
+    .attr("y1", height * volumeChartHeightRatio)
+    .attr("x2", width * 5)
+    .attr("y2", height * volumeChartHeightRatio)
+    .style("stroke", colors.baseLine)
+    .style("stroke-width", 1);
 
   const baseLineY = svg
-    .append('line')
-    .attr('class', 'base-line-y')
-    .attr('x1', width)
-    .attr('y1', 0)
-    .attr('x2', width)
-    .attr('y2', height)
-    .style('stroke', colors.baseLine)
-    .style('stroke-width', 1);
+    .append("line")
+    .attr("class", "base-line-y")
+    .attr("x1", width)
+    .attr("y1", 0)
+    .attr("x2", width)
+    .attr("y2", height)
+    .style("stroke", colors.baseLine)
+    .style("stroke-width", 1);
 
   return { baseLineX, splitLineX, splitLineX2, baseLineY };
 }
@@ -361,10 +385,10 @@ export function setResponsiveSVGDimensions(
   height: number
 ) {
   svg
-    .attr('width', '100%')
-    .attr('height', '100%')
-    .attr('viewBox', `0 0 ${width} ${height}`)
-    .attr('preserveAspectRatio', 'xMidYMid meet');
+    .attr("width", "100%")
+    .attr("height", "100%")
+    .attr("viewBox", `0 0 ${width} ${height}`)
+    .attr("preserveAspectRatio", "xMidYMid meet");
 
   return svg;
 }

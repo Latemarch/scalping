@@ -16,6 +16,7 @@ import { useChartStore } from "@/store/chartStore";
 import { colors } from "@/lib/constants";
 import BackTest from "./BackTest";
 import { calculateMovingAverage } from "@/lib/D3/movingAgerage";
+import { calculateVWAP } from "@/lib/D3/VWAP";
 type Props = {
   initialWidth?: number;
   height?: number;
@@ -48,13 +49,13 @@ export default function ChartLayout({
 
     setIndicators({
       macd: chartOptions.macd ? calculateMACD(candleData) : null,
-      ma5: chartOptions.ma5 ? calculateMovingAverage(candleData, 5) : null,
-      ma10: chartOptions.ma10 ? calculateMovingAverage(candleData, 10) : null,
-      ma20: chartOptions.ma20 ? calculateMovingAverage(candleData, 20) : null,
+      ma5: chartOptions.ma5 ? calculateMovingAverage(candleData, 50) : null,
+      ma10: chartOptions.ma10 ? calculateMovingAverage(candleData, 100) : null,
+      ma20: chartOptions.ma20 ? calculateMovingAverage(candleData, 200) : null,
       bollingerBands: chartOptions.bollingerBands
         ? calculateBollingerBands(candleData, 20)
         : null,
-      // vwap: calculateVWAP(candleData),
+      vwap: calculateVWAP(candleData),
     });
   }, [candleData, chartOptions]);
 

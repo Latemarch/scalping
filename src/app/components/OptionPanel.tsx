@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { Switch } from '@heroui/react';
-import * as React from 'react';
-import { useChartStore } from '@/store/chartStore';
+import { Switch } from "@heroui/react";
+import * as React from "react";
+import { useChartStore } from "@/store/chartStore";
 export default function OptionPanel() {
   const chartOptions = useChartStore((state) => state.chartOptions);
   const toggleIndicator = useChartStore((state) => state.toggleIndicator);
@@ -20,31 +20,33 @@ export default function OptionPanel() {
       <Switch
         defaultSelected={chartOptions.ma5}
         aria-label="MA5"
-        onValueChange={() => toggleIndicator('ma5')}
-      >
-        MA5
-      </Switch>
+        onValueChange={() => toggleIndicator("ma5")}
+      />
+      ma5
       <Switch
         defaultSelected={chartOptions.ma10}
         aria-label="MA10"
-        onValueChange={() => toggleIndicator('ma10')}
-      >
-        MA10
-      </Switch>
+        onValueChange={() => toggleIndicator("ma10")}
+      />
+      ma10
       <Switch
         defaultSelected={chartOptions.ma20}
         aria-label="MA20"
-        onValueChange={() => toggleIndicator('ma20')}
-      >
-        MA20
-      </Switch>
+        onValueChange={() => toggleIndicator("ma20")}
+      />
+      MA20
       <Switch
         defaultSelected={chartOptions.bollingerBands}
         aria-label="Bollinger Bands"
-        onValueChange={() => toggleIndicator('bollingerBands')}
-      >
-        Bollinger Bands
-      </Switch>
+        onValueChange={() => toggleIndicator("bollingerBands")}
+      />
+      bollingerBands
+      <Switch
+        defaultSelected={chartOptions.vwap}
+        aria-label="VWAP"
+        onValueChange={() => toggleIndicator("vwap")}
+      />
+      vwap
     </div>
   );
 }

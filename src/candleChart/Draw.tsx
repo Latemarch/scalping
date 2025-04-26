@@ -277,9 +277,9 @@ export default function Draw({
     // zoom 객체 새로 생성 - 매번 새로운 인스턴스를 만들어 이전 상태 제거
     const zoom = d3
       .zoom()
-      .scaleExtent([1, 20])
+      .scaleExtent([0.5, 25])
       .translateExtent([
-        [-10, 0],
+        [Math.min(0, width - 1500), 0],
         [divWidth + 10, height],
       ])
       .on("zoom", handleZoom);
