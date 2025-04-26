@@ -28,7 +28,9 @@ export default function RootLayout({
       <body className={` antialiased`}>
         <HeroUIProviders>
           <div className="fixed inset-0 bg-bgPrimary"> </div>
-          <div className="relative z-10">{children}</div>
+          <div className="max-w-screen-2xl mx-auto relative z-10">
+            {children}
+          </div>
         </HeroUIProviders>
       </body>
     </html>

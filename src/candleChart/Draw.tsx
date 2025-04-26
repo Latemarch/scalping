@@ -1,19 +1,22 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-import * as d3 from 'd3';
-import { BybitKline } from '@/types/type';
+import * as React from "react";
+import * as d3 from "d3";
+import { BybitKline } from "@/types/type";
 import {
   createCanvasInSVG,
   drawCandlesOnCanvas,
   drawVolumeOnCanvas,
   updateAxis,
-} from '@/lib/D3/candlesChart';
-import { handleMouseLeave, handleMouseMove } from '@/lib/D3/candleChartInteraction';
+} from "@/lib/D3/candlesChart";
+import {
+  handleMouseLeave,
+  handleMouseMove,
+} from "@/lib/D3/candleChartInteraction";
 
-import { IndicatorData } from '@/types/type';
-import { getScales } from '@/lib/D3/ftnsForZoom';
-import { drawIndicators } from '@/lib/D3/drawIndicators';
+import { IndicatorData } from "@/types/type";
+import { getScales } from "@/lib/D3/ftnsForZoom";
+import { drawIndicators } from "@/lib/D3/drawIndicators";
 
 type Props = {
   svgRef: React.RefObject<SVGSVGElement>;
@@ -54,9 +57,9 @@ export default function Draw({
 
     // SVG 선택 및 초기화
     const svg = d3.select(svgRef.current);
-    const width = (divWidth || 500) - 70;
+    const width = (divWidth || 300) - 70;
 
-    svg.attr('width', divWidth);
+    svg.attr("width", divWidth);
 
     const currentDomain = scaleRef.current.xDomain;
     const originalX = d3
@@ -65,7 +68,8 @@ export default function Draw({
         new Date(Number(candleData[0][0])),
         new Date(Number(candleData[candleData.length - 1][0])),
       ])
-      .range([Math.min(0, width - 1000), width]);
+      .range([Math.min(0, width - 1500), width]);
+    // .range([0, width]);
 
     const x = originalX.copy().domain(currentDomain);
     const firstDate = x.invert(0);
@@ -81,11 +85,13 @@ export default function Draw({
       lastDate,
     });
 
-    const baseLineX = d3.select('.base-line-y').attr('x1', width).attr('x2', width);
-    const yAxisGroup = d3.select('.y-axis').attr('transform', `translate(${width}, 0)`);
+    d3.select(".base-line-y").attr("x1", width).attr("x2", width);
+    const yAxisGroup = d3
+      .select(".y-axis")
+      .attr("transform", `translate(${width}, 0)`);
     const yVolumeAxisGroup = d3
-      .select('.y-volume-axis')
-      .attr('transform', `translate(${width}, 0)`);
+      .select(".y-volume-axis")
+      .attr("transform", `translate(${width}, 0)`);
 
     // 축 업데이트
     updateAxis({
@@ -95,7 +101,7 @@ export default function Draw({
       yVolume,
       width,
       height,
-      xAxisGroup: d3.select('.x-axis') as any,
+      xAxisGroup: d3.select(".x-axis") as any,
       yAxisGroup: yAxisGroup as any,
       yVolumeAxisGroup: yVolumeAxisGroup as any,
     });
@@ -105,8 +111,18 @@ export default function Draw({
     let activeWidth: number;
 
     // 새로운 기본 캔들 너비 계산
+    // 현재 보이는 영역에서 첫 번째와 두 번째 캔들 사이의 간격을 계산
+    const visibleData = candleData.filter(
+      (candle) =>
+        new Date(Number(candle[0])) >= currentDomain[0] &&
+        new Date(Number(candle[0])) <= currentDomain[1]
+    );
     const baseWidth =
-      (x(new Date(Number(candleData[1][0]))) - x(new Date(Number(candleData[0][0])))) * 0.8;
+      visibleData.length > 1
+        ? (x(new Date(Number(visibleData[1][0]))) -
+            x(new Date(Number(visibleData[0][0])))) *
+          0.8
+        : (width / candleData.length) * 0.8;
 
     // 줌 상태인 경우
     if (zoomRef.current && zoomRef.current.k !== 1) {
@@ -138,17 +154,17 @@ export default function Draw({
     drawIndicators({ ctx, indicators, x, yMACD, y, activeWidth });
 
     const listeningRect = svg
-      .append('rect')
-      .attr('class', 'listening-rect')
-      .attr('width', width)
-      .attr('height', height)
-      .attr('fill', 'white')
-      .attr('opacity', 0)
-      .attr('cursor', 'crosshair');
+      .append("rect")
+      .attr("class", "listening-rect")
+      .attr("width", width)
+      .attr("height", height)
+      .attr("fill", "white")
+      .attr("opacity", 0)
+      .attr("cursor", "crosshair");
 
     // 이벤트 리스너 등록
     listeningRect
-      .on('mousemove', (event) =>
+      .on("mousemove", (event) =>
         handleMouseMove({
           event,
           data: candleData,
@@ -164,7 +180,7 @@ export default function Draw({
           indicators,
         })
       )
-      .on('mouseleave', handleMouseLeave);
+      .on("mouseleave", handleMouseLeave);
 
     // --------------------------------------------- zoom 이벤트 처리
     const handleZoom = ({ transform }: any) => {
@@ -172,7 +188,7 @@ export default function Draw({
       zoomRef.current = transform;
 
       const rescaleX = transform.rescaleX(originalX);
-      const k = transform.k;
+      // const k = transform.k;
 
       // Get visible domain
       const visibleDomain = rescaleX.domain();
@@ -199,7 +215,7 @@ export default function Draw({
         yVolume: rescaleYVolume,
         width,
         height,
-        xAxisGroup: d3.select('.x-axis') as any,
+        xAxisGroup: d3.select(".x-axis") as any,
         yAxisGroup: yAxisGroup as any,
         yVolumeAxisGroup: yVolumeAxisGroup as any,
       });
@@ -213,8 +229,21 @@ export default function Draw({
         zoomedCandleWidthRef.current = zoomedCandleWidth;
 
         // 선명한 렌더링을 위해 업데이트된 함수 사용
-        drawCandlesOnCanvas(ctx, candleData, rescaleX, rescaleY, zoomedCandleWidth);
-        drawVolumeOnCanvas(ctx, candleData, rescaleX, rescaleYVolume, zoomedCandleWidth, height);
+        drawCandlesOnCanvas(
+          ctx,
+          candleData,
+          rescaleX,
+          rescaleY,
+          zoomedCandleWidth
+        );
+        drawVolumeOnCanvas(
+          ctx,
+          candleData,
+          rescaleX,
+          rescaleYVolume,
+          zoomedCandleWidth,
+          height
+        );
         drawIndicators({
           ctx,
           indicators,
@@ -226,7 +255,7 @@ export default function Draw({
       }
 
       listeningRect
-        .on('mousemove', (event) =>
+        .on("mousemove", (event) =>
           handleMouseMove({
             event,
             data: candleData,
@@ -242,7 +271,7 @@ export default function Draw({
             yMACD: rescaleYMACD || yMACD,
           })
         )
-        .on('mouseleave', handleMouseLeave);
+        .on("mouseleave", handleMouseLeave);
     };
 
     // zoom 객체 새로 생성 - 매번 새로운 인스턴스를 만들어 이전 상태 제거
@@ -253,7 +282,7 @@ export default function Draw({
         [-10, 0],
         [divWidth + 10, height],
       ])
-      .on('zoom', handleZoom);
+      .on("zoom", handleZoom);
 
     svg.call(zoom as any);
 
@@ -271,9 +300,11 @@ export default function Draw({
       setDivWidth(width);
     };
     handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, [candleData]);
 
-  return <div className="absolute inset-0 pointer-events-none" ref={divRef}></div>;
+  return (
+    <div className="absolute inset-0 pointer-events-none" ref={divRef}></div>
+  );
 }
