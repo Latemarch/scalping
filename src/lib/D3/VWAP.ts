@@ -29,7 +29,7 @@ export function drawVWAP(
 
 export function calculateVWAP(
   data: BybitKline[],
-  period: number = 360
+  period: number = 100
 ): VWAPData[] {
   if (data.length === 0) return [];
 
@@ -37,6 +37,7 @@ export function calculateVWAP(
 
   // 각 캔들마다 해당 시점의 VWAP 계산
   for (let i = 0; i < data.length; i++) {
+    if (i < period) continue;
     // 현재 캔들을 기준으로 이전 period개의 캔들 또는 처음부터 현재까지의 캔들 선택
     const startIdx = Math.max(0, i - period + 1);
     const periodData = data.slice(startIdx, i + 1);

@@ -55,7 +55,7 @@ export default function ChartLayout({
       bollingerBands: chartOptions.bollingerBands
         ? calculateBollingerBands(candleData, 20)
         : null,
-      vwap: calculateVWAP(candleData),
+      vwap: chartOptions.vwap ? calculateVWAP(candleData, 200) : null,
     });
   }, [candleData, chartOptions]);
 
