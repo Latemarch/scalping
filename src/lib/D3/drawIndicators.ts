@@ -1,9 +1,9 @@
-import { drawBollingerBands } from './bollingerBands';
-import { drawMACD } from './macd';
-import { drawMovingAverage } from './movingAgerage';
-import { drawVWAP } from './VWAP';
-import { IndicatorData } from '@/types/type';
-import { colors } from '@/lib/constants';
+import { drawBollingerBands } from "./bollingerBands";
+import { drawMACD } from "./macd";
+import { drawMovingAverage } from "./movingAgerage";
+import { drawVWAP } from "./VWAP";
+import { IndicatorData } from "@/types/type";
+import { colors } from "@/lib/constants";
 
 export function drawIndicators({
   ctx,
@@ -43,5 +43,9 @@ export function drawIndicators({
 
   if (indicators.vwap) {
     drawVWAP(ctx, indicators.vwap, x, y, colors.purple);
+  }
+
+  if (indicators.vwapMA) {
+    drawMovingAverage(ctx, indicators.vwapMA, x, y, colors.purple);
   }
 }

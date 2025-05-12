@@ -16,7 +16,11 @@ import { useChartStore } from "@/store/chartStore";
 import { colors } from "@/lib/constants";
 import BackTest from "./BackTest";
 import { calculateMovingAverage } from "@/lib/D3/movingAgerage";
-import { calculateVWAP } from "@/lib/D3/VWAP";
+import {
+  calculateCustomVWAP,
+  calculateVWAP,
+  calculateVWAPMA,
+} from "@/lib/D3/VWAP";
 type Props = {
   initialWidth?: number;
   height?: number;
@@ -46,7 +50,6 @@ export default function ChartLayout({
   // 지표 데이터 계산 - candleData가 변경될 때마다 실행
   React.useEffect(() => {
     if (!candleData.length) return;
-
     setIndicators({
       macd: chartOptions.macd ? calculateMACD(candleData) : null,
       ma5: chartOptions.ma5 ? calculateMovingAverage(candleData, 50) : null,
@@ -56,6 +59,9 @@ export default function ChartLayout({
         ? calculateBollingerBands(candleData, 20)
         : null,
       vwap: chartOptions.vwap ? calculateVWAP(candleData, 200) : null,
+      vwapMA: chartOptions.vwapMA
+        ? calculateVWAPMA(calculateVWAP(candleData, 200), 10)
+        : null,
     });
   }, [candleData, chartOptions]);
 

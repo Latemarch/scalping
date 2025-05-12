@@ -21,6 +21,7 @@ export const useChartStore = create<ChartState>((set, get) => ({
     ma20: false,
     bollingerBands: false,
     vwap: true,
+    vwapMA: true,
   },
   candleChartHeightRatio: 0.6,
   volumeChartHeightRatio: 0.8,

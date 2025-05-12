@@ -35,6 +35,7 @@ export interface IndicatorData {
   ma20?: ReturnType<typeof calculateMovingAverage>;
   bollingerBands?: ReturnType<typeof calculateBollingerBands>;
   vwap?: ReturnType<typeof calculateVWAP>;
+  vwapMA?: ReturnType<typeof calculateVWAPMA>;
 }
 
 export interface ChartOptions {
@@ -44,6 +45,7 @@ export interface ChartOptions {
   ma20: boolean;
   bollingerBands: boolean;
   vwap: boolean;
+  vwapMA: boolean;
 }
 
 export type BollingerBands = {
