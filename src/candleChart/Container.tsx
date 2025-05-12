@@ -20,6 +20,9 @@ export default function Container() {
   }, []);
 
   return (
-    <div>{candleData.length && <ChartLayout candleData={candleData} />}</div>
+    <div className="relative">
+      {/* dd */}
+      {candleData.length && <ChartLayout candleData={candleData} />}
+    </div>
   );
 }

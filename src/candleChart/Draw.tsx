@@ -305,6 +305,9 @@ export default function Draw({
   }, [candleData]);
 
   return (
-    <div className="absolute inset-0 pointer-events-none" ref={divRef}></div>
+    <div
+      className="absolute inset-0 w-full pointer-events-none border"
+      ref={divRef}
+    ></div>
   );
 }
